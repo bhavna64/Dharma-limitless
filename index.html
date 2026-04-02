@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditation App</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            animation: {
+              'ambient-breath': 'breath 8s ease-in-out infinite',
+            },
+            keyframes: {
+              breath: {
+                '0%, 100%': { transform: 'scale(1) translate(0px, 0px)', opacity: 0.3 },
+                '50%': { transform: 'scale(1.1) translate(10px, -10px)', opacity: 0.5 },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Custom Icon wrapper to bridge Lucide vanilla with React smoothly
+        const LucideIcon = ({ name, size = 24, fill = "none" }) => {
+            const iconRef = React.useRef(null);
+
+            useEffect(() => {
+                if (iconRef.current) {
+                    lucide.createIcons({
+                        icons: { [name]: lucide.icons[name] },
+                        nameAttr: 'data-lucide',
+                        attrs: {
+                            class: 'lucide',
+                            'stroke-width': 2,
+                            'stroke': 'currentColor',
+                            fill: fill,
+                            width: size,
+                            height: size
+                        }
+                    });
+                }
+            }, [name, size, fill]);
+
+            return <i ref={iconRef} data-lucide={name}></i>;
+        };
+
+        // Icon Definitions
+        const User = (props) => <LucideIcon name="user" {...props} />;
+        const Calendar = (props) => <LucideIcon name="calendar" {...props} />;
+        const Mail = (props) => <LucideIcon name="mail" {...props} />;
+        const Lock = (props) => <LucideIcon name="lock" {...props} />;
+        const Eye = (props) => <LucideIcon name="eye" {...props} />;
+        const EyeOff = (props) => <LucideIcon name="eye-off" {...props} />;
+        const Home = (props) => <LucideIcon name="home" {...props} />;
+        const List = (props) => <LucideIcon name="list" {...props} />;
+        const RotateCcw = (props) => <LucideIcon name="rotate-ccw" {...props} />;
+        const UserCircle = (props) => <LucideIcon name="user-circle" {...props} />;
+        const Play = (props) => <LucideIcon name="play" {...props} />;
+        const ChevronLeft = (props) => <LucideIcon name="chevron-left" {...props} />;
+        const ChevronRight = (props) => <LucideIcon name="chevron-right" {...props} />;
+        const Plus = (props) => <LucideIcon name="plus" {...props} />;
+
+        function MeditationApp() {
+            const [currentPage, setCurrentPage] = useState('landing');
+            const [showPassword, setShowPassword] = useState(false);
+            const [rememberMe, setRememberMe] = useState(false);
+
+            // Sample data
+            const featuredContent = {
+                title: "MEDITATION BY DEEPAK CHOPRA",
+                year: "2025",
+                seasons: "3 Seasons",
+                type: "Audio/Video",
+                duration: "2h 23m",
+                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+            };
+
+            const previewItems = [
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" }
+            ];
+
+            const continueWatching = [
+                { title: "Meditation By Kata Del Castillo", type: "Video", progress: 70, timeLeft: "27m left", episode: "S3 E8", validUntil: "13 Dec 2025" },
+                { title: "Meditation By Kata Del Castillo", type: "Audio", progress: 45 },
+                { title: "Meditation By Kata Del Castillo", type: "Video", progress: 80 },
+                { title: "Meditation By Kata Del Castillo", type: "Audio", progress: 20 }
+            ];
+
+            const icons = [
+                { name: "Deepak Chopra" },
+                { name: "Eva Longoria" },
+                { name: "Kat del Castillo" },
+                { name: "Diego Boneta" },
+                { name: "Luke Evans" }
+            ];
+
+            const audioContent = [
+                { title: "The Spiritual Laws Of Success", author: "By Deepak Chopra", year: "2025", seasons: "3 Seasons", type: "Meditation", duration: "2h 23m", validUntil: "13 Dec 2025" },
+                { title: "The Spiritual Laws Of Success", author: "By Deepak Chopra", year: "2025", seasons: "3 Seasons", type: "Meditation", duration: "2h 23m" },
+                { title: "The Spiritual Laws Of Success", author: "By Deepak Chopra", year: "2025", seasons: "3 Seasons", type: "Meditation", duration: "2h 23m" }
+            ];
+
+            const videoContent = [
+                { title: "Meditation By Deepak Chopra", year: "2025", seasons: "3 Seasons", type: "Audio/Video", duration: "2h 23m", validUntil: "13 Dec 2025" },
+                { title: "Meditation By Deepak Chopra", year: "2025", seasons: "3 Seasons", type: "Audio/Video", duration: "2h 23m" },
+                { title: "Meditation By Deepak Chopra", year: "2025", seasons: "3 Seasons", type: "Audio/Video", duration: "2h 23m" }
+            ];
+
+            const LandingPage = () => (
+                <div className="min-h-screen bg-[#e8e4dc]">
+                    {/* Main Content */}
+                    <div className="w-full">
+                        {/* Hero Section */}
+                        <div className="relative h-[500px] bg-gradient-to-br from-[#3b4c42] via-[#526458] to-[#2d3d35] overflow-hidden shadow-2xl">
+                            {/* Ambient Animations */}
+                            <div className="absolute inset-0 pointer-events-none mix-blend-screen">
+                                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[#8a9c8f]/40 rounded-full blur-[80px] animate-ambient-breath"></div>
+                                <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-[#b8c4a8]/20 rounded-full blur-[60px] animate-ambient-breath" style={{ animationDelay: '4s' }}></div>
+                            </div>
+
+                            <div className="relative h-full flex items-center px-24 z-10">
+                                <div className="flex-1">
+                                    <div className="text-[#b8c4a8] text-sm font-semibold tracking-widest mb-3 uppercase drop-shadow">FEATURED</div>
+                                    <h1 className="text-white text-7xl font-light mb-6 leading-tight tracking-tight drop-shadow-md" style={{ fontFamily: 'serif' }}>
+                                        MEDITATION BY<br />DEEPAK CHOPRA
+                                    </h1>
+                                    <div className="flex gap-4 text-white/90 text-sm mb-5 font-light">
+                                        <span className="bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-sm">2025</span>
+                                        <span className="py-1">&bull;</span>
+                                        <span className="bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-sm">3 Seasons</span>
+                                        <span className="py-1">&bull;</span>
+                                        <span className="bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-sm">Audio/Video</span>
+                                        <span className="py-1">&bull;</span>
+                                        <span className="py-1">2h 23m</span>
+                                    </div>
+                                    <p className="text-white/80 text-sm font-light max-w-lg mb-8 leading-relaxed drop-shadow-sm">
+                                        {featuredContent.description}
+                                    </p>
+                                    <div className="flex gap-5">
+                                        <button className="bg-white/10 backdrop-blur-md border border-white/20 text-white p-4 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                                            <Plus size={20} />
+                                        </button>
+                                        <button className="bg-gradient-to-r from-[#b8c4a8] to-[#d0dcb9] text-[#2d3d35] px-10 py-4 rounded-full flex items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#b8c4a8]/30 transition-all duration-300 font-medium">
+                                            <Play size={20} fill="currentColor" />
+                                            <span>Play Free Preview (2 min)</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-5 items-center">
+                                    {previewItems.map((item, idx) => (
+                                        <div key={idx} className="relative group cursor-pointer">
+                                            <div className="w-36 h-52 bg-[#2d3d35]/60 rounded-xl overflow-hidden border border-white/10 shadow-lg transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2 group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-80"></div>
+                                                <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md border border-white/10 px-2 py-1 rounded shadow-sm text-white text-[10px] uppercase font-bold tracking-wider z-20">
+                                                    {item.label}
+                                                </div>
+                                                <div className="absolute inset-0 bg-cover bg-center transform transition-transform duration-700 group-hover:scale-125 opacity-30 group-hover:opacity-60" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400')` }}></div>
+                                                <div className="absolute bottom-4 left-4 right-4 z-20">
+                                                    <div className="text-white text-xs font-medium leading-snug drop-shadow-md">{item.title}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <div className="flex flex-col gap-3 ml-2">
+                                        <button className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                                            <ChevronLeft size={20} />
+                                        </button>
+                                        <button className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                                            <ChevronRight size={20} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Continue Watching */}
+                        <div className="px-24 py-16">
+                            <div className="flex items-center justify-between mb-8">
+                                <h2 className="text-4xl font-light tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: 'serif' }}>CONTINUE WATCHING</h2>
+                            </div>
+                            <div className="grid grid-cols-4 gap-8">
+                                {continueWatching.map((item, idx) => (
+                                    <div key={idx} className="relative group cursor-pointer transform transition-all duration-300 hover:-translate-y-1">
+                                        <div className="relative aspect-video bg-gradient-to-br from-[#4a5c52] to-[#2d3d35] rounded-2xl overflow-hidden mb-4 shadow-lg group-hover:shadow-2xl group-hover:shadow-[rgba(0,0,0,0.15)] transition-all duration-300">
+                                            
+                                            <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay group-hover:opacity-60 transition-opacity duration-300" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&q=80&w=600')` }}></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10"></div>
+                                            
+                                            <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md border border-white/10 text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded shadow-sm z-10">
+                                                {item.type}
+                                            </div>
+                                            
+                                            {item.episode && (
+                                                <div className="absolute inset-0 flex items-center justify-center z-10">
+                                                    <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4 text-center transform transition-transform duration-300 group-hover:scale-105 shadow-xl">
+                                                        <div className="text-white/90 text-sm font-medium mb-1 drop-shadow">{item.timeLeft}</div>
+                                                        <div className="text-white text-2xl font-semibold tracking-tight shadow-black drop-shadow-md">{item.episode}</div>
+                                                        {item.validUntil && (
+                                                            <div className="text-[#b8c4a8] text-[10px] uppercase tracking-wider mt-2 font-bold">Valid Until {item.validUntil}</div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            
+                                            <button className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                                                <div className="bg-gradient-to-br from-[#b8c4a8] to-[#d0dcb9] text-[#2d3d35] p-4 rounded-full shadow-[0_0_20px_rgba(184,196,168,0.5)] transform scale-50 group-hover:scale-110 transition-transform duration-300">
+                                                    <Play size={24} fill="currentColor" />
+                                                </div>
+                                            </button>
+                                            
+                                            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/40 z-20">
+                                                <div className="h-full bg-gradient-to-r from-[#8a9c8f] to-[#d0dcb9] relative" style={{ width: `${item.progress}%` }}>
+                                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-[0_0_8px_#d0dcb9]"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Limitless Icons */}
+                        <div className="px-24 py-16 relative overflow-hidden">
+                            <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#8a9c8f]/10 rounded-full blur-[100px] pointer-events-none"></div>
+                            
+                            <h2 className="text-4xl font-light tracking-tight drop-shadow-sm mb-10 text-[#2d3d35]" style={{ fontFamily: 'serif' }}>LIMITLESS ICONS</h2>
+                            <div className="grid grid-cols-5 gap-8">
+                                {icons.map((icon, idx) => (
+                                    <div key={idx} className="cursor-pointer group relative">
+                                        <div className="aspect-square bg-gradient-to-br from-[#4a5c52] to-[#2d3d35] rounded-3xl overflow-hidden shadow-lg border border-white/5 transform transition-all duration-500 group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(45,61,53,0.3)] group-hover:border-white/20">
+                                            
+                                            <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay group-hover:opacity-50 transition-opacity duration-500 scale-100 group-hover:scale-110" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506122713809-1a7f0170a4fb?auto=format&fit=crop&q=80&w=400')` }}></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+                                            
+                                            <div className="absolute inset-0 w-full h-full flex flex-col justify-end p-6 z-10">
+                                                <div className="text-white text-xl font-light tracking-wide transform transition-transform duration-300 group-hover:-translate-y-2">{icon.name}</div>
+                                                <div className="h-0.5 w-0 bg-[#b8c4a8] mt-3 transition-all duration-500 group-hover:w-full opacity-0 group-hover:opacity-100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Audio Content */}
+                        <div className="px-24 py-16">
+                            <div className="flex items-center justify-between mb-10">
+                                <h2 className="text-4xl font-light tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: 'serif' }}>AUDIO CONTENT</h2>
+                                <span className="text-sm tracking-widest uppercase font-semibold text-[#8a9c8f]">2 Days Ago</span>
+                            </div>
+                            <div className="grid grid-cols-4 gap-8">
+                                {audioContent.map((item, idx) => (
+                                    <div key={idx} className="bg-gradient-to-br from-[#2d3d35] to-[#1e2a24] rounded-3xl p-6 text-white cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(45,61,53,0.2)] border border-white/5 group">
+                                        <div className="w-20 h-20 bg-cover bg-center rounded-xl mb-6 shadow-lg border border-white/10 group-hover:scale-105 transition-transform duration-300" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1510915361894-faa8b418ff56?auto=format&fit=crop&q=80&w=200')` }}></div>
+                                        <h3 className="font-semibold text-lg mb-1 leading-snug drop-shadow-sm">{item.title}</h3>
+                                        <p className="text-sm text-[#b8c4a8] mb-6">{item.author}</p>
+                                        <button className="bg-white/10 backdrop-blur-sm border border-white/10 text-white px-6 py-2.5 rounded-full text-sm flex items-center gap-2 mb-5 group-hover:bg-[#b8c4a8] group-hover:text-[#2d3d35] transition-all duration-300 shadow-sm">
+                                            <Play size={14} fill="currentColor" />
+                                            {idx === 1 ? 'Listen' : 'Play Free Preview'}
+                                        </button>
+                                        {item.validUntil && (
+                                            <div className="text-[10px] uppercase font-bold tracking-wider text-white/40 mb-3">Valid Until {item.validUntil}</div>
+                                        )}
+                                        <div className="flex gap-2 text-[11px] uppercase font-bold text-white/30 tracking-wider">
+                                            <span>{item.year}</span>
+                                            <span>&bull;</span>
+                                            <span>{item.seasons}</span>
+                                            <span>&bull;</span>
+                                            <span>{item.type}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Video Content */}
+                        <div className="px-24 py-16 relative overflow-hidden bg-gradient-to-b from-[#e8e4dc] to-[#d6d0c4]">
+                            <div className="flex items-center justify-between mb-10 relative z-10">
+                                <h2 className="text-4xl font-light tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: 'serif' }}>VIDEO CONTENT</h2>
+                                <span className="text-sm tracking-widest uppercase font-semibold text-[#8a9c8f]">2 Days Ago</span>
+                            </div>
+                            <div className="grid grid-cols-4 gap-8 relative z-10">
+                                {videoContent.map((item, idx) => (
+                                    <div key={idx} className="relative group cursor-pointer transform transition-all duration-300 hover:-translate-y-2">
+                                        <div className="aspect-video bg-gradient-to-br from-[#4a5c52] to-[#2d3d35] rounded-2xl overflow-hidden mb-4 relative shadow-lg group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] border border-black/5">
+                                            <div className="absolute inset-0 bg-cover bg-center opacity-50 mix-blend-overlay group-hover:opacity-70 transition-opacity duration-500 transform group-hover:scale-105" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=600')` }}></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                                            
+                                            <div className="absolute bottom-4 left-4 right-4 z-20 transform transition-transform duration-300 group-hover:translate-y-[-8px]">
+                                                <h3 className="text-white font-semibold text-lg mb-2 drop-shadow-md">{item.title}</h3>
+                                                <div className="flex gap-2 text-[10px] uppercase font-bold tracking-wider text-[#b8c4a8]">
+                                                    <span>{item.year}</span>
+                                                    <span>&bull;</span>
+                                                    <span>{item.seasons}</span>
+                                                    <span>&bull;</span>
+                                                    <span>{item.type}</span>
+                                                    <span>&bull;</span>
+                                                    <span>{item.duration}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <button className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
+                                                <div className="bg-gradient-to-br from-[#b8c4a8] to-[#d0dcb9] text-[#2d3d35] p-4 rounded-full shadow-[0_0_20px_rgba(184,196,168,0.5)] transform scale-50 group-hover:scale-110 transition-transform duration-300">
+                                                    <Play size={24} fill="currentColor" />
+                                                </div>
+                                            </button>
+                                        </div>
+                                        {idx === 1 && item.validUntil && (
+                                            <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md border border-white/10 text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded shadow-sm z-30">
+                                                Valid Until {item.validUntil}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-24 py-12 bg-gradient-to-r from-[#1e2a24] to-[#2d3d35] text-white/40 text-sm flex items-center justify-between border-t border-black/10">
+                            <div className="font-light tracking-wide">&copy; 2025 Dharma Limitless. All rights reserved.</div>
+                            <div className="flex gap-8">
+                                <a href="#" className="hover:text-white transition-colors uppercase tracking-wider text-xs font-semibold">Terms Of Use</a>
+                                <a href="#" className="hover:text-white transition-colors uppercase tracking-wider text-xs font-semibold">Privacy Policy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const SignUpPage = () => (
+                <div className="min-h-screen flex">
+                    {/* Left Side - Image */}
+                    <div className="flex-1 bg-gradient-to-br from-gray-400 to-gray-600 relative overflow-hidden">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-96 h-96 rounded-full bg-white/10 backdrop-blur-3xl"></div>
+                        </div>
+                    </div>
+
+                    {/* Right Side - Form */}
+                    <div className="flex-1 bg-[#2d3d35] flex items-center justify-center p-12">
+                        <div className="w-full max-w-md">
+                            <h1 className="text-white text-5xl font-light mb-12" style={{ fontFamily: 'serif' }}>SIGN UP</h1>
+
+                            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-4 text-[#b8c4a8]"><User size={20} /></span>
+                                    <input
+                                        type="text"
+                                        placeholder="John Oliver"
+                                        className="w-full bg-transparent border border-[#b8c4a8]/30 rounded-lg pl-12 pr-4 py-4 text-white placeholder-white/50 focus:outline-none focus:border-[#b8c4a8] transition-colors"
+                                    />
+                                </div>
+
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-4 text-[#b8c4a8]"><Calendar size={20} /></span>
+                                    <input
+                                        type="text"
+                                        placeholder="30/12/2000"
+                                        className="w-full bg-transparent border border-[#b8c4a8]/30 rounded-lg pl-12 pr-4 py-4 text-white placeholder-white/50 focus:outline-none focus:border-[#b8c4a8] transition-colors"
+                                    />
+                                </div>
+
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-4 text-[#b8c4a8]"><Mail size={20} /></span>
+                                    <input
+                                        type="email"
+                                        placeholder="johnoliver@gmail.com"
+                                        className="w-full bg-transparent border border-[#b8c4a8]/30 rounded-lg pl-12 pr-4 py-4 text-white placeholder-white/50 focus:outline-none focus:border-[#b8c4a8] transition-colors"
+                                    />
+                                </div>
+
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-4 text-[#b8c4a8]"><Lock size={20} /></span>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••••••"
+                                        className="w-full bg-transparent border border-[#b8c4a8]/30 rounded-lg pl-12 pr-12 py-4 text-white placeholder-white/50 focus:outline-none focus:border-[#b8c4a8] transition-colors"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 text-[#b8c4a8] hover:text-white transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-[#b8c4a8] text-[#2d3d35] py-4 rounded-lg font-medium hover:bg-[#a8b498] transition-colors"
+                                >
+                                    Sign Up
+                                </button>
+
+                                <div className="text-center text-white/50 text-sm">Or Continue With</div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        type="button"
+                                        className="flex items-center justify-center gap-2 bg-transparent border border-[#b8c4a8]/30 text-white py-3 rounded-lg hover:border-[#b8c4a8] transition-colors"
+                                    >
+                                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                        </svg>
+                                        Google
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="flex items-center justify-center gap-2 bg-transparent border border-[#b8c4a8]/30 text-white py-3 rounded-lg hover:border-[#b8c4a8] transition-colors"
+                                    >
+                                        <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                        </svg>
+                                        Facebook
+                                    </button>
+                                </div>
+
+                                <div className="text-center text-white/70 text-sm">
+                                    Already have an account?{' '}
+                                    <button
+                                        type="button"
+                                        onClick={() => setCurrentPage('signin')}
+                                        className="text-[#b8c4a8] hover:text-white transition-colors underline"
+                                    >
+                                        Sign In
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const SignInPage = () => (
+                <div className="min-h-screen flex">
+                    {/* Left Side - Image */}
+                    <div className="flex-1 bg-gradient-to-br from-gray-400 to-gray-600 relative overflow-hidden">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-96 h-96 rounded-full bg-white/10 backdrop-blur-3xl"></div>
+                        </div>
+                    </div>
+
+                    {/* Right Side - Form */}
+                    <div className="flex-1 bg-[#2d3d35] flex items-center justify-center p-12">
+                        <div className="w-full max-w-md">
+                            <h1 className="text-white text-5xl font-light mb-12" style={{ fontFamily: 'serif' }}>SIGN IN</h1>
+
+                            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-4 text-[#b8c4a8]"><Mail size={20} /></span>
+                                    <input
+                                        type="email"
+                                        placeholder=""
+                                        className="w-full bg-transparent border border-[#b8c4a8]/30 rounded-lg pl-12 pr-4 py-4 text-white placeholder-white/50 focus:outline-none focus:border-[#b8c4a8] transition-colors"
+                                    />
+                                </div>
+
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-4 text-[#b8c4a8]"><Lock size={20} /></span>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder=""
+                                        className="w-full bg-transparent border border-[#b8c4a8]/30 rounded-lg pl-12 pr-12 py-4 text-white placeholder-white/50 focus:outline-none focus:border-[#b8c4a8] transition-colors"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 text-[#b8c4a8] hover:text-white transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="remember"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className="w-4 h-4 rounded border-[#b8c4a8]/30 bg-transparent text-[#b8c4a8] focus:ring-0 focus:ring-offset-0"
+                                    />
+                                    <label htmlFor="remember" className="ml-2 text-white/70 text-sm">
+                                        Remember me
+                                    </label>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-[#b8c4a8] text-[#2d3d35] py-4 rounded-lg font-medium hover:bg-[#a8b498] transition-colors"
+                                >
+                                    Sign in
+                                </button>
+
+                                <div className="text-center">
+                                    <button
+                                        type="button"
+                                        className="text-white/70 hover:text-white text-sm transition-colors"
+                                    >
+                                        Forgot Password?
+                                    </button>
+                                </div>
+
+                                <div className="text-center text-white/50 text-sm">Or Continue With</div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        type="button"
+                                        className="flex items-center justify-center gap-2 bg-transparent border border-[#b8c4a8]/30 text-white py-3 rounded-lg hover:border-[#b8c4a8] transition-colors"
+                                    >
+                                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                        </svg>
+                                        Google
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="flex items-center justify-center gap-2 bg-transparent border border-[#b8c4a8]/30 text-white py-3 rounded-lg hover:border-[#b8c4a8] transition-colors"
+                                    >
+                                        <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                        </svg>
+                                        Facebook
+                                    </button>
+                                </div>
+
+                                <div className="text-center text-white/70 text-sm">
+                                    Don't have an account?{' '}
+                                    <button
+                                        type="button"
+                                        onClick={() => setCurrentPage('signup')}
+                                        className="text-[#b8c4a8] hover:text-white transition-colors underline"
+                                    >
+                                        Sign Up
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Navigation
+            return (
+                <div>
+                    {/* Render Current Page */}
+                    {currentPage === 'landing' && <LandingPage />}
+                    {currentPage === 'signup' && <SignUpPage />}
+                    {currentPage === 'signin' && <SignInPage />}
+                </div>
+            );
+        }
+
+        const rootLayout = ReactDOM.createRoot(document.getElementById('root'));
+        rootLayout.render(<MeditationApp />);
+    </script>
+</body>
+</html>
