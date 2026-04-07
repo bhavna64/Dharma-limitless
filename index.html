@@ -18,12 +18,22 @@
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // Custom Icon wrapper to bridge Lucide vanilla with React smoothly
         const LucideIcon = ({ name, size = 24, fill = "none" }) => {
@@ -64,11 +74,13 @@
         const ChevronLeft = (props) => <LucideIcon name="chevron-left" {...props} />;
         const ChevronRight = (props) => <LucideIcon name="chevron-right" {...props} />;
         const Plus = (props) => <LucideIcon name="plus" {...props} />;
+        const Heart = (props) => <LucideIcon name="heart" {...props} />;
 
         function MeditationApp() {
             const [currentPage, setCurrentPage] = useState('landing');
             const [showPassword, setShowPassword] = useState(false);
             const [rememberMe, setRememberMe] = useState(false);
+            const carouselRef = useRef(null);
 
             // Sample data
             const featuredContent = {
@@ -81,6 +93,9 @@
             };
 
             const previewItems = [
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
                 { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
                 { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
                 { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" }
@@ -114,19 +129,77 @@
             ];
 
             const LandingPage = () => (
-                <div className="min-h-screen bg-[#e8e4dc]">
+                <div className="flex">
+                    {/* Sidebar */}
+                    <div style={{ width: '118px', height: '914px' }} className="fixed left-0 top-0 bg-gradient-to-b from-[#22382B] to-[#111E16] flex flex-col items-center shadow-2xl z-50">
+                        {/* Logo */}
+                        <div style={{ paddingTop: '34px' }} className="flex justify-center">
+                            <svg width="84" height="80" viewBox="0 0 64 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M31.9995 21.2355C26.1657 21.2355 21.4194 16.4726 21.4194 10.6183C21.4194 4.76394 26.1657 0 31.9995 0C37.8333 0 42.5796 4.76293 42.5796 10.6172C42.5796 16.4716 37.8333 21.2345 31.9995 21.2345V21.2355ZM31.9995 2.53378C27.5578 2.53378 23.9443 6.15994 23.9443 10.6172C23.9443 15.0746 27.5578 18.7007 31.9995 18.7007C36.4412 18.7007 40.0547 15.0746 40.0547 10.6172C40.0547 6.15994 36.4412 2.53378 31.9995 2.53378Z" fill="#DDD5CF"/>
+                                <path d="M1.65948 59.0646L0 57.1552C8.88841 49.3784 20.2856 45.0966 32.091 45.0966C43.8963 45.0966 55.1407 49.3229 64 56.9969L62.3496 58.9153C53.9486 51.6378 43.2027 47.6303 32.091 47.6303C20.9792 47.6303 10.0875 51.6913 1.65948 59.0656V59.0646Z" fill="#DDD5CF"/>
+                                <path d="M31.9995 39.1071C20.9651 39.1071 11.9883 30.0987 11.9883 19.0255H14.5132C14.5132 28.7017 22.3572 36.5733 31.9995 36.5733C41.6418 36.5733 49.4858 28.7017 49.4858 19.0255H52.0107C52.0107 30.0987 43.0339 39.1071 31.9995 39.1071Z" fill="#DDD5CF"/>
+                            </svg>
+                        </div>
+
+                        {/* Home Icon */}
+                        <div style={{ marginTop: '124px' }} className="flex justify-center">
+                            <button className="text-[#b8c4a8] hover:text-white transition-colors p-3 rounded-full hover:bg-white/10">
+                                <svg width="34" height="34" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18.75 26.2496V16.2496C18.75 15.9181 18.6183 15.6002 18.3839 15.3657C18.1495 15.1313 17.8315 14.9996 17.5 14.9996H12.5C12.1685 14.9996 11.8505 15.1313 11.6161 15.3657C11.3817 15.6002 11.25 15.9181 11.25 16.2496V26.2496M3.75 12.4996C3.74991 12.136 3.82917 11.7767 3.98223 11.4468C4.1353 11.1169 4.3585 10.8244 4.63625 10.5896L13.3862 3.08962C13.8375 2.70826 14.4092 2.49902 15 2.49902C15.5908 2.49902 16.1625 2.70826 16.6138 3.08962L25.3638 10.5896C25.6415 10.8244 25.8647 11.1169 26.0178 11.4468C26.1708 11.7767 26.2501 12.136 26.25 12.4996V23.7496C26.25 24.4127 25.9866 25.0485 25.5178 25.5174C25.0489 25.9862 24.413 26.2496 23.75 26.2496H6.25C5.58696 26.2496 4.95107 25.9862 4.48223 25.5174C4.01339 25.0485 3.75 24.4127 3.75 23.7496V12.4996Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* List Plus Icon */}
+                        <div style={{ marginTop: '30px' }} className="flex justify-center">
+                            <button className="text-white hover:text-white transition-colors p-3 rounded-full hover:bg-white/10">
+                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 6.25H3.75M13.75 15H3.75M20 23.75H3.75M22.5 11.25V18.75M26.25 15H18.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Vector Icon */}
+                        <div style={{ marginTop: '30px' }} className="flex justify-center">
+                            <button className="text-white hover:text-white transition-colors p-3 rounded-full hover:bg-white/10">
+                                <svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11 13.5C14.4518 13.5 17.25 10.7018 17.25 7.25C17.25 3.79822 14.4518 1 11 1C7.54822 1 4.75 3.79822 4.75 7.25C4.75 10.7018 7.54822 13.5 11 13.5ZM11 13.5C13.6522 13.5 16.1957 14.5536 18.0711 16.4289C19.9464 18.3043 21 20.8478 21 23.5M11 13.5C8.34783 13.5 5.8043 14.5536 3.92893 16.4289C2.05357 18.3043 1 20.8478 1 23.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Sign Out Icon */}
+                        <div style={{ marginTop: '214px' }} className="flex justify-center">
+                            <button className="text-white hover:text-white transition-colors p-3 rounded-full hover:bg-white/10">
+                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.5 15L1.71913 14.3753L1.21938 15L1.71913 15.6247L2.5 15ZM13.75 16C14.3023 16 14.75 15.5523 14.75 15C14.75 14.4477 14.3023 14 13.75 14V15V16ZM7.5 8.75L6.71913 8.1253L1.71913 14.3753L2.5 15L3.28087 15.6247L8.28087 9.3747L7.5 8.75ZM2.5 15L1.71913 15.6247L6.71913 21.8747L7.5 21.25L8.28087 20.6253L3.28087 14.3753L2.5 15ZM2.5 15V16H13.75V15V14H2.5V15Z" fill="white"/>
+                                    <path d="M12.5 10.1649V8.38851C12.5 6.77017 12.5 5.961 12.974 5.4015C13.4479 4.84201 14.2461 4.70899 15.8424 4.44293L20.5136 3.6644C23.7567 3.12388 25.3782 2.85363 26.4391 3.75232C27.5 4.65102 27.5 6.29493 27.5 9.58276V20.4172C27.5 23.7051 27.5 25.349 26.4391 26.2477C25.3782 27.1464 23.7567 26.8761 20.5136 26.3356L15.8424 25.5571C14.2461 25.291 13.4479 25.158 12.974 24.5985C12.5 24.039 12.5 23.2298 12.5 21.6115V20.0825" stroke="white" strokeWidth="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
                     {/* Main Content */}
-                    <div className="w-full">
+                    <div className="ml-[118px] w-[calc(100%-118px)] bg-[#e8e4dc]">
+                        {/* Content Wrapper */}
+                        <div className="w-full">
                         {/* Hero Section */}
-                        <div className="relative h-[500px] bg-gradient-to-br from-[#3b4c42] via-[#526458] to-[#2d3d35] overflow-hidden shadow-2xl">
+                        <div className="relative h-[914px] bg-gradient-to-br from-[#3b4c42] via-[#526458] to-[#2d3d35] overflow-hidden shadow-2xl">
+                            {/* Background Image */}
+                            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('Asset/hero section image.svg')`, filter: 'brightness(1.2) contrast(1.15) saturate(1.1)' }}></div>
+
+                            {/* Gradient Overlay - Much lighter for better visibility */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent"></div>
+
                             {/* Ambient Animations */}
                             <div className="absolute inset-0 pointer-events-none mix-blend-screen">
                                 <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[#8a9c8f]/40 rounded-full blur-[80px] animate-ambient-breath"></div>
                                 <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-[#b8c4a8]/20 rounded-full blur-[60px] animate-ambient-breath" style={{ animationDelay: '4s' }}></div>
                             </div>
 
-                            <div className="relative h-full flex items-center px-24 z-10">
-                                <div className="flex-1">
+                            <div className="relative h-full flex flex-col justify-end px-24 z-10 pb-[70px]">
+                                <div className="flex gap-12 items-end">
+                                    <div className="flex-1">
                                     <div className="text-[#b8c4a8] text-sm font-semibold tracking-widest mb-3 uppercase drop-shadow">FEATURED</div>
                                     <h1 className="text-white text-7xl font-light mb-6 leading-tight tracking-tight drop-shadow-md" style={{ fontFamily: 'serif' }}>
                                         MEDITATION BY<br />DEEPAK CHOPRA
@@ -154,29 +227,54 @@
                                     </div>
                                 </div>
 
-                                <div className="flex gap-5 items-center">
-                                    {previewItems.map((item, idx) => (
-                                        <div key={idx} className="relative group cursor-pointer">
-                                            <div className="w-36 h-52 bg-[#2d3d35]/60 rounded-xl overflow-hidden border border-white/10 shadow-lg transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2 group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-80"></div>
-                                                <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md border border-white/10 px-2 py-1 rounded shadow-sm text-white text-[10px] uppercase font-bold tracking-wider z-20">
-                                                    {item.label}
-                                                </div>
-                                                <div className="absolute inset-0 bg-cover bg-center transform transition-transform duration-700 group-hover:scale-125 opacity-30 group-hover:opacity-60" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400')` }}></div>
-                                                <div className="absolute bottom-4 left-4 right-4 z-20">
-                                                    <div className="text-white text-xs font-medium leading-snug drop-shadow-md">{item.title}</div>
+                                    <div className="flex flex-col gap-5">
+                                        <div 
+                                            ref={carouselRef}
+                                            className="flex gap-8 overflow-hidden pb-4 scroll-smooth items-center" 
+                                            style={{ scrollBehavior: 'smooth', width: '656px', height: '380px' }}
+                                        >
+                                        {previewItems.map((item, idx) => {
+                                            const gradients = [
+                                                'from-[#b8c4a8] via-[#d0dcb9] to-[#8fa887]',
+                                                'from-[#b8c4a8] via-[#c5d1b5] to-[#7a8870]',
+                                                'from-[#d0dcb9] via-[#e8e4dc] to-[#b8c4a8]',
+                                                'from-[#b8c4a8] via-[#d0dcb9] to-[#8fa887]',
+                                                'from-[#b8c4a8] via-[#c5d1b5] to-[#7a8870]',
+                                                'from-[#d0dcb9] via-[#e8e4dc] to-[#b8c4a8]'
+                                            ];
+                                            return (
+                                            <div key={idx} className="relative group cursor-pointer flex-shrink-0">
+                                                <div className={`bg-gradient-to-br ${gradients[idx]} rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(184,196,168,0.4)]`} style={{ width: '228px', height: '310px' }}>
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-[#22382B]/70 via-transparent to-transparent z-10 transition-opacity duration-300 group-hover:opacity-60"></div>
+                                                    
+                                                    <div className="absolute inset-0 opacity-50 mix-blend-multiply group-hover:opacity-40 transition-opacity duration-300" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400')`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                                                    
+                                                    <div className="absolute top-4 right-4 bg-gradient-to-r from-[#22382B]/90 to-[#111E16]/90 backdrop-blur-lg border border-[#b8c4a8]/40 px-3 py-1.5 rounded-full shadow-lg text-[#e8e4dc] text-[11px] uppercase font-bold tracking-wider z-20">
+                                                        {item.label}
+                                                    </div>
+                                                    
+                                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#22382B] via-[#22382B]/60 to-transparent p-4 z-20">
+                                                        <div className="text-[#e8e4dc] text-sm font-semibold leading-snug drop-shadow-lg">{item.title}</div>
+                                                        <div className="text-[#d0dcb9] text-xs mt-2 opacity-90">Free preview available</div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                    <div className="flex flex-col gap-3 ml-2">
-                                        <button className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="flex gap-3 justify-end mt-4">
+                                        <button 
+                                            onClick={() => carouselRef.current?.scrollBy({ left: -256, behavior: 'smooth' })}
+                                            className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
                                             <ChevronLeft size={20} />
                                         </button>
-                                        <button className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                                        <button 
+                                            onClick={() => carouselRef.current?.scrollBy({ left: 256, behavior: 'smooth' })}
+                                            className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
                                             <ChevronRight size={20} />
                                         </button>
                                     </div>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -330,6 +428,7 @@
                                 <a href="#" className="hover:text-white transition-colors uppercase tracking-wider text-xs font-semibold">Terms Of Use</a>
                                 <a href="#" className="hover:text-white transition-colors uppercase tracking-wider text-xs font-semibold">Privacy Policy</a>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
