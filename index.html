@@ -80,6 +80,7 @@
             const [currentPage, setCurrentPage] = useState('landing');
             const [showPassword, setShowPassword] = useState(false);
             const [rememberMe, setRememberMe] = useState(false);
+            const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
             const carouselRef = useRef(null);
 
             // Sample data
@@ -93,12 +94,12 @@
             };
 
             const previewItems = [
-                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
-                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
-                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
-                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
-                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" },
-                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW" }
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW", image: "Asset/carousal%20image.svg" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW", image: "Asset/carousal%20image-2.svg" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW", image: "Asset/carousal%20image%203.svg" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW", image: "Asset/carousal%20image.svg" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW", image: "Asset/carousal%20image-2.svg" },
+                { title: "Meditation By Kata Del Castillo", label: "FREE PREVIEW", image: "Asset/carousal%20image%203.svg" }
             ];
 
             const continueWatching = [
@@ -231,7 +232,7 @@
                                         <div 
                                             ref={carouselRef}
                                             className="flex gap-8 overflow-hidden pb-4 scroll-smooth items-center" 
-                                            style={{ scrollBehavior: 'smooth', width: '656px', height: '380px' }}
+                                            style={{ scrollBehavior: 'smooth', width: '750px', height: '380px' }}
                                         >
                                         {previewItems.map((item, idx) => {
                                             const gradients = [
@@ -244,10 +245,10 @@
                                             ];
                                             return (
                                             <div key={idx} className="relative group cursor-pointer flex-shrink-0">
-                                                <div className={`bg-gradient-to-br ${gradients[idx]} rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(184,196,168,0.4)]`} style={{ width: '228px', height: '310px' }}>
+                                                <div className={`bg-gradient-to-br ${gradients[idx]} rounded-2xl overflow-hidden border-2 border-transparent group-hover:border-white/50 shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(184,196,168,0.4)]`} style={{ width: '228px', height: '310px' }}>
                                                     <div className="absolute inset-0 bg-gradient-to-t from-[#22382B]/70 via-transparent to-transparent z-10 transition-opacity duration-300 group-hover:opacity-60"></div>
                                                     
-                                                    <div className="absolute inset-0 opacity-50 mix-blend-multiply group-hover:opacity-40 transition-opacity duration-300" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400')`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                                                    <div className="absolute inset-0 transition-opacity duration-300" style={{ backgroundImage: `url('${item.image}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
                                                     
                                                     <div className="absolute top-4 right-4 bg-gradient-to-r from-[#22382B]/90 to-[#111E16]/90 backdrop-blur-lg border border-[#b8c4a8]/40 px-3 py-1.5 rounded-full shadow-lg text-[#e8e4dc] text-[11px] uppercase font-bold tracking-wider z-20">
                                                         {item.label}
@@ -263,16 +264,20 @@
                                         })}
                                     </div>
                                     <div className="flex gap-3 justify-end mt-4">
-                                        <button 
-                                            onClick={() => carouselRef.current?.scrollBy({ left: -256, behavior: 'smooth' })}
-                                            className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
-                                            <ChevronLeft size={20} />
-                                        </button>
-                                        <button 
-                                            onClick={() => carouselRef.current?.scrollBy({ left: 256, behavior: 'smooth' })}
-                                            className="bg-black/30 backdrop-blur-lg border border-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300">
-                                            <ChevronRight size={20} />
-                                        </button>
+                                        {[0, 1, 2].map((idx) => (
+                                            <button 
+                                                key={idx}
+                                                onClick={() => {
+                                                    setActiveCarouselIndex(idx);
+                                                    carouselRef.current?.scrollTo({ left: idx * 520, behavior: 'smooth' });
+                                                }}
+                                                className={`backdrop-blur-lg rounded-full hover:bg-white/80 hover:scale-105 transition-all duration-300 flex items-center justify-center ${
+                                                    activeCarouselIndex === idx 
+                                                        ? 'bg-white text-black w-[80px]' 
+                                                        : 'bg-white/50 text-black w-[40px]'
+                                                } h-[5px]`}
+                                            ></button>
+                                        ))}
                                     </div>
                                 </div>
                                 </div>
