@@ -125,17 +125,18 @@
 
             const continueWatching = [
                 { title: "Meditation By Kata Del Castillo", type: "Video", progress: 70, timeLeft: "27m left", episode: "S3 E8", validUntil: "13 Dec 2025", image: "./Asset/continue%20watching%20images%20/Rectangle%2011.svg" },
-                { title: "Meditation By Kata Del Castillo", type: "Audio", progress: 45, image: "./Asset/continue%20watching%20images%20/Rectangle%2012.svg" },
-                { title: "Meditation By Kata Del Castillo", type: "Video", progress: 80, image: "./Asset/continue%20watching%20images%20/Rectangle%2013.svg" },
-                { title: "Meditation By Kata Del Castillo", type: "Audio", progress: 20, image: "./Asset/continue%20watching%20images%20/Rectangle%2015.svg" }
+                { title: "Meditation By Kata Del Castillo", type: "Audio", progress: 45, timeLeft: "27m left", episode: "S3 E8", validUntil: "13 Dec 2025", image: "./Asset/continue%20watching%20images%20/Rectangle%2012.svg" },
+                { title: "Meditation By Kata Del Castillo", type: "Video", progress: 80, timeLeft: "27m left", episode: "S3 E8", validUntil: "13 Dec 2025", image: "./Asset/continue%20watching%20images%20/Rectangle%2013.svg" },
+                { title: "Meditation By Kata Del Castillo", type: "Audio", progress: 20, timeLeft: "27m left", episode: "S3 E8", validUntil: "13 Dec 2025", image: "./Asset/continue%20watching%20images%20/Rectangle%2015.svg" },
+                { title: "Meditation By Kata Del Castillo", type: "Video", progress: 55, timeLeft: "27m left", episode: "S3 E8", validUntil: "13 Dec 2025", image: "./Asset/continue%20watching%20images%20/Group%203068.svg" }
             ];
 
             const icons = [
-                { name: "Deepak Chopra" },
-                { name: "Eva Longoria" },
-                { name: "Kat del Castillo" },
-                { name: "Diego Boneta" },
-                { name: "Luke Evans" }
+                { name: "Deepak Chopra", image: "./Asset/limitless%20icon-1.svg" },
+                { name: "Eva Longoria", image: "./Asset/limitless%20icon%20-2.svg" },
+                { name: "Kat del Castillo", image: "./Asset/limitless%20icon-3.svg" },
+                { name: "Diego Boneta", image: "./Asset/limitless%20icon-4.svg" },
+                { name: "Luke Evans", image: "./Asset/limitless%20icon-5.svg" }
             ];
 
             const audioContent = [
@@ -309,14 +310,14 @@
                             </div>
 
                             {/* Continue Watching */}
-                            <div className="bg-[#E5DFDA] px-24 py-[90px]">
+                            <div className="bg-[#E5DFDA] px-24 pt-[90px] pb-[40px]">
                                 <div className="flex items-center justify-between mb-8">
                                     <h2 className="text-[40px] font-normal tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: "'Typhone', serif" }}>CONTINUE WATCHING</h2>
                                 </div>
-                                <div className="flex flex-wrap gap-[25px]">
+                                <div className="flex overflow-x-auto gap-[25px] pb-[120px] -mb-[120px] pt-10 -mt-10 px-6 -mx-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     {continueWatching.map((item, idx) => (
-                                        <div key={idx} className="relative group cursor-pointer w-[311px] h-[206px]">
-                                            <div className="absolute top-0 left-0 w-[311px] h-[206px] group-hover:h-[281px] group-hover:-translate-y-3 z-10 group-hover:z-50 bg-[#1e2a21] rounded-2xl overflow-hidden shadow-lg group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 origin-top flex flex-col">
+                                        <div key={idx} className="relative group cursor-pointer w-[311px] h-[206px] flex-shrink-0 snap-start">
+                                            <div className="absolute top-0 left-0 w-[311px] h-[206px] group-hover:h-[281px] group-hover:-translate-y-3 z-10 group-hover:z-50 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 origin-top flex flex-col" style={{ background: 'linear-gradient(to bottom, #22382B 10%, #111E16 100%)' }}>
 
                                                 <div className="relative w-[311px] h-[206px] flex-shrink-0">
                                                     <div className="absolute inset-0 bg-cover bg-center transition-all duration-500" style={{ backgroundImage: `url('${item.image}')` }}></div>
@@ -376,17 +377,17 @@
                             </div>
 
                             {/* Limitless Icons */}
-                            <div className="bg-[#E5DFDA] px-24 py-[90px] relative overflow-hidden">
+                            <div className="bg-[#E5DFDA] px-24 py-[40px] relative overflow-hidden">
                                 <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#E5DFDA] rounded-full blur-[100px] pointer-events-none"></div>
 
                                 <h2 className="text-[40px] font-normal tracking-tight drop-shadow-sm mb-10 text-[#2d3d35]" style={{ fontFamily: "'Typhone', serif" }}>LIMITLESS ICONS</h2>
-                                <div className="grid grid-cols-5 gap-8">
+                                <div className="flex flex-wrap gap-[24px]">
                                     {icons.map((icon, idx) => (
-                                        <div key={idx} className="cursor-pointer group relative">
-                                            <div className="aspect-square bg-gradient-to-br from-[#4a5c52] to-[#2d3d35] rounded-3xl overflow-hidden shadow-lg border border-white/5 transform transition-all duration-500 group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(45,61,53,0.3)] group-hover:border-white/20">
+                                        <div key={idx} className="cursor-pointer group relative w-[251px] h-[314px]">
+                                            <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg border border-white/5 transform transition-all duration-500 group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(45,61,53,0.3)] group-hover:border-white/20" style={{ background: 'linear-gradient(to bottom right, #29372A 0%, #C4CFCB 100%)' }}>
 
-                                                <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay group-hover:opacity-50 transition-opacity duration-500 scale-100 group-hover:scale-110" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506122713809-1a7f0170a4fb?auto=format&fit=crop&q=80&w=400')` }}></div>
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+                                                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-110" style={{ backgroundImage: `url('${icon.image}')` }}></div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-500 opacity-80 group-hover:opacity-100"></div>
 
                                                 <div className="absolute inset-0 w-full h-full flex flex-col justify-end p-6 z-10">
                                                     <div className="text-white text-xl font-light tracking-wide transform transition-transform duration-300 group-hover:-translate-y-2">{icon.name}</div>
@@ -399,7 +400,7 @@
                             </div>
 
                             {/* Audio Content */}
-                            <div className="bg-[#E5DFDA] px-24 py-[90px]">
+                            <div className="bg-[#E5DFDA] px-24 py-[40px]">
                                 <div className="flex items-center justify-between mb-10">
                                     <h2 className="text-[40px] font-normal tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: "'Typhone', serif" }}>AUDIO CONTENT</h2>
                                     <span className="text-sm tracking-widest uppercase font-semibold text-[#8a9c8f]">2 Days Ago</span>
@@ -430,7 +431,7 @@
                             </div>
 
                             {/* Video Content */}
-                            <div className="bg-[#E5DFDA] px-24 py-[90px] relative overflow-hidden">
+                            <div className="bg-[#E5DFDA] px-24 pt-[40px] pb-[90px] relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-10 relative z-10">
                                     <h2 className="text-[40px] font-normal tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: "'Typhone', serif" }}>VIDEO CONTENT</h2>
                                     <span className="text-sm tracking-widest uppercase font-semibold text-[#8a9c8f]">2 Days Ago</span>
