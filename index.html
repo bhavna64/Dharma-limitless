@@ -289,7 +289,7 @@
                                                     );
                                                 })}
                                             </div>
-                                            <div className="flex gap-3 justify-end mt-4">
+                                            <div className="flex gap-3 justify-start mt-4 ml-4">
                                                 {[0, 1, 2].map((idx) => (
                                                     <button
                                                         key={idx}
@@ -314,7 +314,7 @@
                                 <div className="flex items-center justify-between mb-8">
                                     <h2 className="text-[40px] font-normal tracking-tight drop-shadow-sm text-[#2d3d35]" style={{ fontFamily: "'Typhone', serif" }}>CONTINUE WATCHING</h2>
                                 </div>
-                                <div className="flex overflow-x-auto gap-[25px] pb-[120px] -mb-[120px] pt-10 -mt-10 px-6 -mx-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                <div className="flex overflow-x-auto gap-[25px] pb-[120px] -mb-[120px] pt-10 -mt-10 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     {continueWatching.map((item, idx) => (
                                         <div key={idx} className="relative group cursor-pointer w-[311px] h-[206px] flex-shrink-0 snap-start">
                                             <div className="absolute top-0 left-0 w-[311px] h-[206px] group-hover:h-[281px] group-hover:-translate-y-3 z-10 group-hover:z-50 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 origin-top flex flex-col" style={{ background: 'linear-gradient(to bottom, #22382B 10%, #111E16 100%)' }}>
